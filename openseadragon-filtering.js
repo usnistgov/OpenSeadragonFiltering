@@ -82,15 +82,28 @@
 
         function applyFilters(context, filtersProcessors, callback) {
             if (callback) {
+                var currentIncrement = self.filterIncrement;
                 var callbacks = [];
                 for (var i = 0; i < filtersProcessors.length - 1; i++) {
                     (function(i) {
                         callbacks[i] = function() {
+                            // If the increment has changed, stop the computation
+                            // chain immediately.
+                            if (self.filterIncrement !== currentIncrement) {
+                                return;
+                            }
                             filtersProcessors[i + 1](context, callbacks[i + 1]);
                         };
                     })(i);
                 }
-                callbacks[filtersProcessors.length - 1] = callback;
+                callbacks[filtersProcessors.length - 1] = function() {
+                    // If the increment has changed, do not call the callback.
+                    // (We don't want OSD to draw an outdated tile in the canvas).
+                    if (self.filterIncrement !== currentIncrement) {
+                        return;
+                    }
+                    callback();
+                };
                 filtersProcessors[0](context, callbacks[0]);
             } else {
                 for (var i = 0; i < filtersProcessors.length; i++) {
