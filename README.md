@@ -184,28 +184,25 @@ viewer.setFilterOptions({
 });
 `````
 
-Note: if you are mixing Caman and non Caman filters, the later may not be
-applied to the tiles. This is because Caman uses a cache system. One
-can disable it with this hack:
+Note: Caman is caching every canvas it processes. This causes two issues with
+this plugin:
+1. It creates a memory leak because OpenSeadragon creates a lot of canvases
+which do not get garbage collected anymore.
+2. Non-caman filters in between 2 camans filters get ignored.
+
+There isn't any clean way to
+[disable the cache system](https://github.com/meltingice/CamanJS/issues/185),
+however one can use this hack to prevent any caching:
 
 `````javascript
-    var caman = function(canvas, callback) {
-        var storeHasBackup = Caman.Store.has;
-        Caman.Store.has = function() {
-            return false;
-        };
-        Caman(canvas, function() {
-            callback.bind(this)();
-            Caman.Store.has = storeHasBackup;
-        });
-    };
+    Caman.Store.put = function() {};
 
     var viewer = new OpenSeadragon.Viewer(...);
     viewer.setFilterOptions({
         filters: {
             processors: [
                 function(context, callback) {
-                    caman(context.canvas, function() {
+                    Caman(context.canvas, function() {
                         this.sepia(50);
                         // Do not forget to call this.render with the callback
                         this.render(callback);
@@ -213,7 +210,7 @@ can disable it with this hack:
                 },
                 OpenSeadragon.Filters.INVERT(),
                 function(context, callback) {
-                    caman(context.canvas, function() {
+                    Caman(context.canvas, function() {
                         this.vibrance(40);
                         // Do not forget to call this.render with the callback
                         this.render(callback);
@@ -237,6 +234,11 @@ to save the modified pixels.
 The callback method must be called when the filtering is done. The provided
 filters are good examples for such implementations.
 
+### Edge effects
+
+This plugin is working on tiles and does not currently handle tiles edges.
+This means that if you are using kernel based filters, you should expect
+edge effects around tiles.
 
 ### Disclaimer:
 
