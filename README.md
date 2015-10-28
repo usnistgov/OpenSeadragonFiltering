@@ -37,12 +37,12 @@ Increase the brightness on item 0 and invert item 1:
 var viewer = new OpenSeadragon.Viewer(...);
 viewer.setFilterOptions({
     filters: [{
-        items: viewer.world.getItemAt(0)
+        items: viewer.world.getItemAt(0),
         processors: [
             OpenSeadragon.Filters.BRIGHTNESS(50)
         ]
     }, {
-        items: viewer.world.getItemAt(1)
+        items: viewer.world.getItemAt(1),
         processors: [
             OpenSeadragon.Filters.INVERT()
         ]
