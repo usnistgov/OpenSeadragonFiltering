@@ -1,0 +1,44 @@
+{
+  "name": "openseadragon-filtering",
+  "version": "1.0.0",
+  "description": "OpenSeadragon plugin providing filtering capabilities to the images.",
+  "main": "openseadragon-filtering.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NIST-ISG/OpenSeadragonFiltering.git"
+  },
+  "keywords": [
+    "openseadragon",
+    "filtering",
+    "image",
+    "processing",
+    "zoom",
+    "seadragon",
+    "deepzoom"
+  ],
+  "author": "Antoine Vandecreme",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/NIST-ISG/OpenSeadragonFiltering/issues"
+  },
+  "homepage": "https://github.com/NIST-ISG/OpenSeadragonFiltering#readme",
+  "dependencies": {
+    "openseadragon": ">=2.1"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^1.1.1",
+    "css-loader": "^0.23.1",
+    "eslint": "^2.1.0",
+    "eslint-loader": "^1.3.0",
+    "file-loader": "^0.8.5",
+    "jquery": "^2.2.0",
+    "jquery-ui": "^1.10.5",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.13"
+  },
+  "scripts": {
+      "build": "webpack",
+      "watch": "webpack --watch",
+      "clean": "rm -rf dist"
+  }
+}

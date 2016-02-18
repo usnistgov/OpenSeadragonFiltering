@@ -1,4 +1,4 @@
-/* 
+/*
  * This software was developed at the National Institute of Standards and
  * Technology by employees of the Federal Government in the course of
  * their official duties. Pursuant to title 17 Section 105 of the United
@@ -14,7 +14,23 @@
  *
  * @author Antoine Vandecreme <antoine.vandecreme@nist.gov>
  */
-(function($) {
+(function() {
+
+    'use strict';
+
+    var $ = window.OpenSeadragon;
+    if (!$) {
+        $ = require('openseadragon');
+        if (!$) {
+            throw new Error('OpenSeadragon is missing.');
+        }
+    }
+    // Requires OpenSeadragon >=2.1
+    if (!$.version || $.version.major < 2 ||
+        $.version.major === 2 && $.version.minor < 1) {
+        throw new Error(
+            'Filtering plugin requires OpenSeadragon version >= 2.1');
+    }
 
     $.Viewer.prototype.setFilterOptions = function(options) {
         if (!this.filterPluginInstance) {
@@ -28,7 +44,7 @@
 
     /**
      * @class FilterPlugin
-     * @param {Object} options
+     * @param {Object} options The options
      * @param {OpenSeadragon.Viewer} options.viewer The viewer to attach this
      * plugin to.
      * @param {String} [options.loadMode='async'] Set to sync to have the filters
@@ -44,13 +60,13 @@
     $.FilterPlugin = function(options) {
         options = options || {};
         if (!options.viewer) {
-            throw new Error("A viewer must be specified.");
+            throw new Error('A viewer must be specified.');
         }
         var self = this;
         this.viewer = options.viewer;
 
-        this.viewer.addHandler("tile-loaded", tileLoadedHandler);
-        this.viewer.addHandler("tile-drawing", tileDrawingHandler);
+        this.viewer.addHandler('tile-loaded', tileLoadedHandler);
+        this.viewer.addHandler('tile-drawing', tileDrawingHandler);
 
         // filterIncrement allows to determine whether a tile contains the
         // latest filters results.
@@ -67,7 +83,7 @@
             var tile = event.tile;
             var image = event.image;
             if (image !== null) {
-                var canvas = document.createElement('canvas');
+                var canvas = window.document.createElement('canvas');
                 canvas.width = image.width;
                 canvas.height = image.height;
                 var context = canvas.getContext('2d');
@@ -136,14 +152,14 @@
                 rendered.putImageData(rendered._originalImageData, 0, 0);
             } else {
                 rendered._originalImageData = rendered.getImageData(
-                        0, 0, rendered.canvas.width, rendered.canvas.height);
+                    0, 0, rendered.canvas.width, rendered.canvas.height);
             }
 
             if (tile._renderedContext) {
                 if (tile._filterIncrement === self.filterIncrement) {
                     var imgData = tile._renderedContext.getImageData(0, 0,
-                            tile._renderedContext.canvas.width,
-                            tile._renderedContext.canvas.height);
+                        tile._renderedContext.canvas.width,
+                        tile._renderedContext.canvas.height);
                     rendered.putImageData(imgData, 0, 0);
                     delete tile._renderedContext;
                     delete tile._filterIncrement;
@@ -162,14 +178,14 @@
         options = options || {};
         var filters = options.filters;
         instance.filters = !filters ? [] :
-                ($.isArray(filters) ? filters : [filters]);
+            $.isArray(filters) ? filters : [filters];
         for (var i = 0; i < instance.filters.length; i++) {
             var filter = instance.filters[i];
             if (!filter.processors) {
-                throw new Error("Filter processors must be specified.");
+                throw new Error('Filter processors must be specified.');
             }
             filter.processors = $.isArray(filter.processors) ?
-                    filter.processors : [filter.processors];
+                filter.processors : [filter.processors];
         }
         instance.filterIncrement++;
 
@@ -185,8 +201,8 @@
                 }
                 for (var j = 0; j < filter.items.length; j++) {
                     if (itemsToReset.indexOf(filter.items[j]) >= 0) {
-                        throw new Error("An item can not have filters assigned "
-                                + "multiple times.");
+                        throw new Error('An item can not have filters ' +
+                            'assigned multiple times.');
                     }
                     itemsToReset.push(filter.items[j]);
                 }
@@ -225,19 +241,19 @@
     $.Filters = {
         THRESHOLDING: function(threshold) {
             if (threshold < 0 || threshold > 255) {
-                throw new Error("Threshold must be between 0 and 255.");
+                throw new Error('Threshold must be between 0 and 255.');
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
-                        0, 0, context.canvas.width, context.canvas.height);
+                    0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
                     var r = pixels[i];
                     var g = pixels[i + 1];
                     var b = pixels[i + 2];
                     var v = (r + g + b) / 3;
-                    pixels[i] = pixels[i + 1] = pixels[i + 2]
-                            = v < threshold ? 0 : 255;
+                    pixels[i] = pixels[i + 1] = pixels[i + 2] =
+                        v < threshold ? 0 : 255;
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -246,11 +262,11 @@
         BRIGHTNESS: function(adjustment) {
             if (adjustment < -255 || adjustment > 255) {
                 throw new Error(
-                        "Brightness adjustment must be between -255 and 255.");
+                    'Brightness adjustment must be between -255 and 255.');
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
-                        0, 0, context.canvas.width, context.canvas.height);
+                    0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
                     pixels[i] += adjustment;
@@ -264,7 +280,7 @@
         INVERT: function() {
             return function(context, callback) {
                 var imgData = context.getImageData(
-                        0, 0, context.canvas.width, context.canvas.height);
+                    0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
                     pixels[i] = 255 - pixels[i];
@@ -277,19 +293,20 @@
         },
         MORPHOLOGICAL_OPERATION: function(kernelSize, comparator) {
             if (kernelSize % 2 === 0) {
-                throw new Error("The kernel size must be an odd number.");
+                throw new Error('The kernel size must be an odd number.');
             }
             var kernelHalfSize = Math.floor(kernelSize / 2);
 
             if (!comparator) {
-                throw new Error("A comparator must be defined.");
+                throw new Error('A comparator must be defined.');
             }
 
             return function(context, callback) {
                 var width = context.canvas.width;
                 var height = context.canvas.height;
                 var imgData = context.getImageData(0, 0, width, height);
-                var originalPixels = context.getImageData(0, 0, width, height).data;
+                var originalPixels = context.getImageData(0, 0, width, height)
+                    .data;
                 var offset;
 
                 for (var y = 0; y < height; y++) {
@@ -303,11 +320,13 @@
                                 var pixelX = x + i - kernelHalfSize;
                                 var pixelY = y + j - kernelHalfSize;
                                 if (pixelX >= 0 && pixelX < width &&
-                                        pixelY >= 0 && pixelY < height) {
+                                    pixelY >= 0 && pixelY < height) {
                                     offset = (pixelY * width + pixelX) * 4;
                                     r = comparator(originalPixels[offset], r);
-                                    g = comparator(originalPixels[offset + 1], g);
-                                    b = comparator(originalPixels[offset + 2], b);
+                                    g = comparator(
+                                        originalPixels[offset + 1], g);
+                                    b = comparator(
+                                        originalPixels[offset + 2], b);
                                 }
                             }
                         }
@@ -322,12 +341,12 @@
         },
         CONVOLUTION: function(kernel) {
             if (!$.isArray(kernel)) {
-                throw new Error("The kernel must be an array.");
+                throw new Error('The kernel must be an array.');
             }
             var kernelSize = Math.sqrt(kernel.length);
             if ((kernelSize + 1) % 2 !== 0) {
-                throw new Error("The kernel must be a square matrix with odd" +
-                        "width and height.");
+                throw new Error('The kernel must be a square matrix with odd' +
+                    'width and height.');
             }
             var kernelHalfSize = (kernelSize - 1) / 2;
 
@@ -335,7 +354,8 @@
                 var width = context.canvas.width;
                 var height = context.canvas.height;
                 var imgData = context.getImageData(0, 0, width, height);
-                var originalPixels = context.getImageData(0, 0, width, height).data;
+                var originalPixels = context.getImageData(0, 0, width, height)
+                    .data;
                 var offset;
 
                 for (var y = 0; y < height; y++) {
@@ -348,7 +368,7 @@
                                 var pixelX = x + i - kernelHalfSize;
                                 var pixelY = y + j - kernelHalfSize;
                                 if (pixelX >= 0 && pixelX < width &&
-                                        pixelY >= 0 && pixelY < height) {
+                                    pixelY >= 0 && pixelY < height) {
                                     offset = (pixelY * width + pixelX) * 4;
                                     var weight = kernel[j * kernelSize + i];
                                     r += originalPixels[offset] * weight;
@@ -369,4 +389,4 @@
         }
     };
 
-}(OpenSeadragon));
+}());

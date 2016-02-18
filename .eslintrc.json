@@ -1,0 +1,14 @@
+{
+    "extends": "./node_modules/eslint-config-defaults/configurations/google.js",
+    "rules": {
+        "indent": [2, 4],
+        "newline-after-var": 0,
+        "dot-location": [2, "property"]
+    },
+    "globals": {
+        "window": true,
+        "define": true,
+        "require": true,
+        "Caman": true
+    }
+}
