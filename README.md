@@ -32,17 +32,17 @@ viewer.setFilterOptions({
 
 ### Specify on which items (TiledImage) to apply the filters
 
-Increase the brightness on item 0 and invert item 1:
+Increase the brightness on item 0 and invert items 1 and 2:
 `````javascript
 var viewer = new OpenSeadragon.Viewer(...);
 viewer.setFilterOptions({
     filters: [{
-        items: [viewer.world.getItemAt(0)],
+        items: viewer.world.getItemAt(0),
         processors: [
             OpenSeadragon.Filters.BRIGHTNESS(50)
         ]
     }, {
-        items: [viewer.world.getItemAt(1)],
+        items: [viewer.world.getItemAt(1), viewer.world.getItemAt(2)],
         processors: [
             OpenSeadragon.Filters.INVERT()
         ]

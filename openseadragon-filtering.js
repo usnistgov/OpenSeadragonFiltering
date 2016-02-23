@@ -199,18 +199,26 @@
                     itemsToReset = getAllItems(instance.viewer.world);
                     break;
                 }
-                for (var j = 0; j < filter.items.length; j++) {
-                    if (itemsToReset.indexOf(filter.items[j]) >= 0) {
-                        throw new Error('An item can not have filters ' +
-                            'assigned multiple times.');
+                if ($.isArray(filter.items)) {
+                    for (var j = 0; j < filter.items.length; j++) {
+                        addItemToReset(filter.items[j], itemsToReset);
                     }
-                    itemsToReset.push(filter.items[j]);
+                } else {
+                    addItemToReset(filter.items, itemsToReset);
                 }
             }
             for (var i = 0; i < itemsToReset.length; i++) {
                 itemsToReset[i].reset();
             }
         }
+    }
+
+    function addItemToReset(item, itemsToReset) {
+        if (itemsToReset.indexOf(item) >= 0) {
+            throw new Error('An item can not have filters ' +
+                'assigned multiple times.');
+        }
+        itemsToReset.push(item);
     }
 
     function getAllItems(world) {
@@ -231,7 +239,8 @@
             var filter = instance.filters[i];
             if (!filter.items) {
                 globalProcessors = filter.processors;
-            } else if (filter.items.indexOf(item) >= 0) {
+            } else if (filter.items === item ||
+                $.isArray(filter.items) && filter.items.indexOf(item) >= 0) {
                 return filter.processors;
             }
         }
