@@ -3,7 +3,7 @@ the capability to add filters to the images.
 
 A demo is available [here](http://nist-isg.github.io/OpenSeadragonFiltering/).
 
-This plugin requires OpenSeadragon 2.1+ (not yet released at the time of writing).
+This plugin requires OpenSeadragon 2.1+.
 
 ### Basic usage
 
