@@ -286,6 +286,57 @@
                 callback();
             };
         },
+        CONTRAST: function(adjustment) {
+            if (adjustment < 0) {
+                throw new Error('Contrast adjustment must be positive.');
+            }
+            return function(context, callback) {
+                var imgData = context.getImageData(
+                    0, 0, context.canvas.width, context.canvas.height);
+                var pixels = imgData.data;
+                for (var i = 0; i < pixels.length; i += 4) {
+                    pixels[i] *= adjustment;
+                    pixels[i + 1] *= adjustment;
+                    pixels[i + 2] *= adjustment;
+                }
+                context.putImageData(imgData, 0, 0);
+                callback();
+            };
+        },
+        GAMMA: function(adjustment) {
+            if (adjustment < 0) {
+                throw new Error('Gamma adjustment must be positive.');
+            }
+            return function(context, callback) {
+                var imgData = context.getImageData(
+                    0, 0, context.canvas.width, context.canvas.height);
+                var pixels = imgData.data;
+                for (var i = 0; i < pixels.length; i += 4) {
+                    pixels[i] = Math.pow(pixels[i] / 255, adjustment) * 255;
+                    pixels[i + 1] =
+                        Math.pow(pixels[i + 1] / 255, adjustment) * 255;
+                    pixels[i + 2] =
+                        Math.pow(pixels[i + 2] / 255, adjustment) * 255;
+                }
+                context.putImageData(imgData, 0, 0);
+                callback();
+            };
+        },
+        GREYSCALE: function() {
+            return function(context, callback) {
+                var imgData = context.getImageData(
+                    0, 0, context.canvas.width, context.canvas.height);
+                var pixels = imgData.data;
+                for (var i = 0; i < pixels.length; i += 4) {
+                    var val = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+                    pixels[i] = val;
+                    pixels[i + 1] = val;
+                    pixels[i + 2] = val;
+                }
+                context.putImageData(imgData, 0, 0);
+                callback();
+            };
+        },
         INVERT: function() {
             return function(context, callback) {
                 var imgData = context.getImageData(
