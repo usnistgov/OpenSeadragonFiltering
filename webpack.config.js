@@ -35,6 +35,9 @@ module.exports = {
             }, {
                 from: 'demo/images',
                 to: 'images'
+            }, {
+                from: 'demo/static',
+                to: 'static'
             }]),
         new webpack.ProvidePlugin({
             $: "jquery",

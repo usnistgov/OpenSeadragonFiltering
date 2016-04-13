@@ -1,7 +1,7 @@
 This [OpenSeadragon](http://openseadragon.github.io/) plugin provides 
 the capability to add filters to the images.
 
-A demo is available [here](http://nist-isg.github.io/OpenSeadragonFiltering/).
+A demo is available [here](https://pages.nist.gov/OpenSeadragonFiltering/).
 
 This plugin requires OpenSeadragon 2.1+.
 
@@ -75,7 +75,7 @@ viewer.setFilterOptions({
 
 To visualize the difference between async and sync mode, one can compare how
 the brightness (sync) and contrast (async) filters load in the
-[demo](http://nist-isg.github.io/OpenSeadragonFiltering/).
+[demo](https://pages.nist.gov/OpenSeadragonFiltering/).
 
 ### Provided filters
 

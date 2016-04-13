@@ -5,7 +5,7 @@
   "main": "openseadragon-filtering.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NIST-ISG/OpenSeadragonFiltering.git"
+    "url": "git+https://github.com/usnistgov/OpenSeadragonFiltering.git"
   },
   "keywords": [
     "openseadragon",
@@ -19,9 +19,9 @@
   "author": "Antoine Vandecreme",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/NIST-ISG/OpenSeadragonFiltering/issues"
+    "url": "https://github.com/usnistgov/OpenSeadragonFiltering/issues"
   },
-  "homepage": "https://github.com/NIST-ISG/OpenSeadragonFiltering#readme",
+  "homepage": "https://github.com/usnistgov/OpenSeadragonFiltering#readme",
   "dependencies": {
     "openseadragon": ">=2.1"
   },
