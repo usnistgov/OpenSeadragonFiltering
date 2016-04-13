@@ -9,6 +9,15 @@ guarantees, expressed or implied, about its quality, reliability, or
 any other characteristic. We would appreciate acknowledgement if the
 software is used.
 */
+.demo {
+    line-height: normal;
+}
+
+.demo h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 #openseadragon {
     width: 100%;
     height: 700px;

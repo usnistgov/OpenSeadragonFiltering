@@ -194,16 +194,17 @@
 	        }
 	    }, {
 	        name: 'Contrast',
-	        help: 'Range is -100 to 100. Values < 0 will decrease ' +
-	            'contrast while values > 0 will increase contrast',
+	        help: 'Range is from 0 to infinity, although sane values are from 0 ' +
+	            'to 4 or 5. Values between 0 and 1 will lessen the contrast ' +
+	            'while values greater than 1 will increase it.',
 	        generate: function(updateCallback) {
 	            var $html = $('<div></div>');
 	            var spinnerSlider = new SpinnerSlider({
 	                $element: $html,
-	                init: 10,
-	                min: -100,
-	                max: 100,
-	                step: 1,
+	                init: 1.3,
+	                min: 0,
+	                sliderMax: 4,
+	                step: 0.1,
 	                updateCallback: updateCallback
 	            });
 	            return {
@@ -212,14 +213,10 @@
 	                    return spinnerSlider.getValue();
 	                },
 	                getFilter: function() {
-	                    var value = spinnerSlider.getValue();
-	                    return function(context, callback) {
-	                        caman(context.canvas, function() {
-	                            this.contrast(value);
-	                            this.render(callback); // don't forget to call the callback.
-	                        });
-	                    };
-	                }
+	                    return OpenSeadragon.Filters.CONTRAST(
+	                        spinnerSlider.getValue());
+	                },
+	                sync: true
 	            };
 	        }
 	    }, {
@@ -274,12 +271,7 @@
 	                },
 	                getFilter: function() {
 	                    var value = spinnerSlider.getValue();
-	                    return function(context, callback) {
-	                        caman(context.canvas, function() {
-	                            this.gamma(value);
-	                            this.render(callback); // don't forget to call the callback.
-	                        });
-	                    };
+	                    return OpenSeadragon.Filters.GAMMA(value);
 	                }
 	            };
 	        }
@@ -437,13 +429,9 @@
 	                    return '';
 	                },
 	                getFilter: function() {
-	                    return function(context, callback) {
-	                        caman(context.canvas, function() {
-	                            this.greyscale();
-	                            this.render(callback); // don't forget to call the callback.
-	                        });
-	                    };
-	                }
+	                    return OpenSeadragon.Filters.GREYSCALE();
+	                },
+	                sync: true
 	            };
 	        }
 	    }, {
@@ -45534,6 +45522,57 @@
 	                    pixels[i] += adjustment;
 	                    pixels[i + 1] += adjustment;
 	                    pixels[i + 2] += adjustment;
+	                }
+	                context.putImageData(imgData, 0, 0);
+	                callback();
+	            };
+	        },
+	        CONTRAST: function(adjustment) {
+	            if (adjustment < 0) {
+	                throw new Error('Contrast adjustment must be positive.');
+	            }
+	            return function(context, callback) {
+	                var imgData = context.getImageData(
+	                    0, 0, context.canvas.width, context.canvas.height);
+	                var pixels = imgData.data;
+	                for (var i = 0; i < pixels.length; i += 4) {
+	                    pixels[i] *= adjustment;
+	                    pixels[i + 1] *= adjustment;
+	                    pixels[i + 2] *= adjustment;
+	                }
+	                context.putImageData(imgData, 0, 0);
+	                callback();
+	            };
+	        },
+	        GAMMA: function(adjustment) {
+	            if (adjustment < 0) {
+	                throw new Error('Gamma adjustment must be positive.');
+	            }
+	            return function(context, callback) {
+	                var imgData = context.getImageData(
+	                    0, 0, context.canvas.width, context.canvas.height);
+	                var pixels = imgData.data;
+	                for (var i = 0; i < pixels.length; i += 4) {
+	                    pixels[i] = Math.pow(pixels[i] / 255, adjustment) * 255;
+	                    pixels[i + 1] =
+	                        Math.pow(pixels[i + 1] / 255, adjustment) * 255;
+	                    pixels[i + 2] =
+	                        Math.pow(pixels[i + 2] / 255, adjustment) * 255;
+	                }
+	                context.putImageData(imgData, 0, 0);
+	                callback();
+	            };
+	        },
+	        GREYSCALE: function() {
+	            return function(context, callback) {
+	                var imgData = context.getImageData(
+	                    0, 0, context.canvas.width, context.canvas.height);
+	                var pixels = imgData.data;
+	                for (var i = 0; i < pixels.length; i += 4) {
+	                    var val = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+	                    pixels[i] = val;
+	                    pixels[i + 1] = val;
+	                    pixels[i + 2] = val;
 	                }
 	                context.putImageData(imgData, 0, 0);
 	                callback();
