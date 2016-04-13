@@ -81,7 +81,7 @@
 	var viewer = new OpenSeadragon({
 	    id: 'openseadragon',
 	    prefixUrl: 'images/',
-	    tileSources: 'http://openseadragon.github.io/example-images/highsmith/highsmith.dzi',
+	    tileSources: '//openseadragon.github.io/example-images/highsmith/highsmith.dzi',
 	    crossOriginPolicy: 'Anonymous'
 	});
 
