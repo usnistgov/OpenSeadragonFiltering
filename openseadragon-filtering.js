@@ -82,7 +82,7 @@
             }
             var tile = event.tile;
             var image = event.image;
-            if (image !== null) {
+            if (image !== null && typeof(image) != "undefined") {
                 var canvas = window.document.createElement('canvas');
                 canvas.width = image.width;
                 canvas.height = image.height;
