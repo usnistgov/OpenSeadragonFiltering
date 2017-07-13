@@ -273,18 +273,18 @@
                 throw new Error(
                     'Brightness adjustment must be between -255 and 255.');
             }
-            var precomputed_BRIGHTNESS = []
+            var precomputedBrightness = []
             for (var i = 0; i < 256; i++) {
-                precomputed_BRIGHTNESS[i] = i + adjustment;
+                precomputedBrightness[i] = i + adjustment;
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = precomputed_BRIGHTNESS[pixels[i]];
-                    pixels[i + 1] = precomputed_BRIGHTNESS[pixels[i + 1]];
-                    pixels[i + 2] = precomputed_BRIGHTNESS[pixels[i + 2]];
+                    pixels[i] = precomputedBrightness[pixels[i]];
+                    pixels[i + 1] = precomputedBrightness[pixels[i + 1]];
+                    pixels[i + 2] = precomputedBrightness[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -294,18 +294,18 @@
             if (adjustment < 0) {
                 throw new Error('Contrast adjustment must be positive.');
             }
-            var precomputed_CONTRAST = []
+            var precomputedContrast = []
             for (var i = 0; i < 256; i++) {
-                precomputed_CONTRAST[i] = i * adjustment;
+                precomputedContrast[i] = i * adjustment;
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = precomputed_CONTRAST[pixels[i]];
-                    pixels[i + 1] = precomputed_CONTRAST[pixels[i + 1]];
-                    pixels[i + 2] = precomputed_CONTRAST[pixels[i + 2]];
+                    pixels[i] = precomputedContrast[pixels[i]];
+                    pixels[i + 1] = precomputedContrast[pixels[i + 1]];
+                    pixels[i + 2] = precomputedContrast[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -315,18 +315,18 @@
             if (adjustment < 0) {
                 throw new Error('Gamma adjustment must be positive.');
             }
-            var precomputed_GAMMA = []
+            var precomputedGamma = []
             for (var i = 0; i < 256; i++) {
-                precomputed_GAMMA[i] = Math.pow(i / 255, adjustment) * 255;
+                precomputedGamma[i] = Math.pow(i / 255, adjustment) * 255;
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = precomputed_GAMMA[pixels[i]];
-                    pixels[i + 1] = precomputed_GAMMA[pixels[i + 1]];
-                    pixels[i + 2] = precomputed_GAMMA[pixels[i + 2]];
+                    pixels[i] = precomputedGamma[pixels[i]];
+                    pixels[i + 1] = precomputedGamma[pixels[i + 1]];
+                    pixels[i + 2] = precomputedGamma[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -348,18 +348,18 @@
             };
         },
         INVERT: function () {
-            var precomputed_INVERT = []
+            var precomputedInvert = []
             for (var i = 0; i < 256; i++) {
-                precomputed_INVERT[i] = 255 - i;
+                precomputedInvert[i] = 255 - i;
             }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = precomputed_INVERT[pixels[i]];
-                    pixels[i + 1] = precomputed_INVERT[pixels[i + 1]];
-                    pixels[i + 2] = precomputed_INVERT[pixels[i + 2]];
+                    pixels[i] = precomputedInvert[pixels[i]];
+                    pixels[i + 1] = precomputedInvert[pixels[i + 1]];
+                    pixels[i + 2] = precomputedInvert[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
