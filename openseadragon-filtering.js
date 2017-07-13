@@ -273,14 +273,18 @@
                 throw new Error(
                     'Brightness adjustment must be between -255 and 255.');
             }
+            var precomputedBrightness = []
+            for (var i = 0; i < 256; i++) {
+                precomputedBrightness[i] = i + adjustment;
+            }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] += adjustment;
-                    pixels[i + 1] += adjustment;
-                    pixels[i + 2] += adjustment;
+                    pixels[i] = precomputedBrightness[pixels[i]];
+                    pixels[i + 1] = precomputedBrightness[pixels[i + 1]];
+                    pixels[i + 2] = precomputedBrightness[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -290,14 +294,18 @@
             if (adjustment < 0) {
                 throw new Error('Contrast adjustment must be positive.');
             }
+            var precomputedContrast = []
+            for (var i = 0; i < 256; i++) {
+                precomputedContrast[i] = i * adjustment;
+            }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] *= adjustment;
-                    pixels[i + 1] *= adjustment;
-                    pixels[i + 2] *= adjustment;
+                    pixels[i] = precomputedContrast[pixels[i]];
+                    pixels[i + 1] = precomputedContrast[pixels[i + 1]];
+                    pixels[i + 2] = precomputedContrast[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -307,16 +315,18 @@
             if (adjustment < 0) {
                 throw new Error('Gamma adjustment must be positive.');
             }
+            var precomputedGamma = []
+            for (var i = 0; i < 256; i++) {
+                precomputedGamma[i] = Math.pow(i / 255, adjustment) * 255;
+            }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = Math.pow(pixels[i] / 255, adjustment) * 255;
-                    pixels[i + 1] =
-                        Math.pow(pixels[i + 1] / 255, adjustment) * 255;
-                    pixels[i + 2] =
-                        Math.pow(pixels[i + 2] / 255, adjustment) * 255;
+                    pixels[i] = precomputedGamma[pixels[i]];
+                    pixels[i + 1] = precomputedGamma[pixels[i + 1]];
+                    pixels[i + 2] = precomputedGamma[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
@@ -337,15 +347,19 @@
                 callback();
             };
         },
-        INVERT: function() {
+        INVERT: function () {
+            var precomputedInvert = []
+            for (var i = 0; i < 256; i++) {
+                precomputedInvert[i] = 255 - i;
+            }
             return function(context, callback) {
                 var imgData = context.getImageData(
                     0, 0, context.canvas.width, context.canvas.height);
                 var pixels = imgData.data;
                 for (var i = 0; i < pixels.length; i += 4) {
-                    pixels[i] = 255 - pixels[i];
-                    pixels[i + 1] = 255 - pixels[i + 1];
-                    pixels[i + 2] = 255 - pixels[i + 2];
+                    pixels[i] = precomputedInvert[pixels[i]];
+                    pixels[i + 1] = precomputedInvert[pixels[i + 1]];
+                    pixels[i + 2] = precomputedInvert[pixels[i + 2]];
                 }
                 context.putImageData(imgData, 0, 0);
                 callback();
