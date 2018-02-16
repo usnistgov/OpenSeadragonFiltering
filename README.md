@@ -1,4 +1,4 @@
-This [OpenSeadragon](http://openseadragon.github.io/) plugin provides 
+This [OpenSeadragon](http://openseadragon.github.io/) plugin provides
 the capability to add filters to the images.
 
 A demo is available [here](https://pages.nist.gov/OpenSeadragonFiltering/).
@@ -100,7 +100,7 @@ viewer.setFilterOptions({
 * Brightness
 
 Shift the intensity of the pixels by the specified adjustment
-(between -255 and 255). 
+(between -255 and 255).
 
 `````javascript
 var viewer = new OpenSeadragon.Viewer(...);
@@ -239,6 +239,11 @@ filters are good examples for such implementations.
 This plugin is working on tiles and does not currently handle tiles edges.
 This means that if you are using kernel based filters, you should expect
 edge effects around tiles.
+
+### Build the demo
+
+To build the demo run `npm install` and then `npm run-script build`.
+The result of the build will be in the `dist` folder.
 
 ### Disclaimer:
 

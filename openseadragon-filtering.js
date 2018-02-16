@@ -82,7 +82,7 @@
             }
             var tile = event.tile;
             var image = event.image;
-            if (image !== null && typeof(image) != "undefined") {
+            if (image !== null && image !== undefined) {
                 var canvas = window.document.createElement('canvas');
                 canvas.width = image.width;
                 canvas.height = image.height;
@@ -273,7 +273,7 @@
                 throw new Error(
                     'Brightness adjustment must be between -255 and 255.');
             }
-            var precomputedBrightness = []
+            var precomputedBrightness = [];
             for (var i = 0; i < 256; i++) {
                 precomputedBrightness[i] = i + adjustment;
             }
@@ -294,7 +294,7 @@
             if (adjustment < 0) {
                 throw new Error('Contrast adjustment must be positive.');
             }
-            var precomputedContrast = []
+            var precomputedContrast = [];
             for (var i = 0; i < 256; i++) {
                 precomputedContrast[i] = i * adjustment;
             }
@@ -315,7 +315,7 @@
             if (adjustment < 0) {
                 throw new Error('Gamma adjustment must be positive.');
             }
-            var precomputedGamma = []
+            var precomputedGamma = [];
             for (var i = 0; i < 256; i++) {
                 precomputedGamma[i] = Math.pow(i / 255, adjustment) * 255;
             }
@@ -347,8 +347,8 @@
                 callback();
             };
         },
-        INVERT: function () {
-            var precomputedInvert = []
+        INVERT: function() {
+            var precomputedInvert = [];
             for (var i = 0; i < 256; i++) {
                 precomputedInvert[i] = 255 - i;
             }

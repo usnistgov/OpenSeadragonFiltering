@@ -19,7 +19,7 @@ require('file?name=[name].[ext]!./index.html');
 require('file?name=[name].[ext]!./style.css');
 
 var $ = require('jquery');
-require('jquery-ui');
+require('webpack-jquery-ui');
 var Spinner = require('./spinner');
 var SpinnerSlider = require('./spinner-slider');
 
