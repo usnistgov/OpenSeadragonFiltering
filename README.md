@@ -163,6 +163,26 @@ viewer.setFilterOptions({
 });
 `````
 
+* Colormap
+
+Apply a [colormap](http://cxc.harvard.edu/ciao/threads/auxlut/index.html#auxlut) to the averaged RGB values of the image.
+Colormaps are defined by a series of [R,G,B] stops.
+Grayscale values of 0-255 are mapped to the interpolated stop values.
+A variable centerpoint allows adjustment of the colormap.
+
+`````javascript
+var viewer = new OpenSeadragon.Viewer(...);
+viewer.setFilterOptions({
+    filters: {
+        processors: OpenSeadragon.Filters.COLORMAP([
+           [0, 0,  0],
+           [0, 128, 0],
+           [0, 250,  0],
+           [0, 255, 0]], 128)
+    }
+});
+`````
+
 ### Integration with CamanJS
 
 [CamanJS](http://camanjs.com) supports a wide range of filters. They can be
