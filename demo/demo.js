@@ -15,11 +15,13 @@
  * @author Antoine Vandecreme <antoine.vandecreme@nist.gov>
  */
 
-require('file?name=[name].[ext]!./index.html');
-require('file?name=[name].[ext]!./style.css');
+require('file-loader?name=[name].[ext]!./index.html');
+require('style-loader?name=[name].[ext]!./style.css');
+
 
 var $ = require('jquery');
 require('webpack-jquery-ui');
+require('webpack-jquery-ui/css');
 var Spinner = require('./spinner');
 var SpinnerSlider = require('./spinner-slider');
 
