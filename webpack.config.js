@@ -3,31 +3,54 @@ var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+    mode: "development",
     context: __dirname,
     entry: ['./demo/demo.js'],
     output: {
-        path: __dirname + '/dist',
-        filename: 'demo-bundle.js'
-    },
-    eslint: {
-        configFile: '.eslintrc.json'
+        filename: 'demo-bundle.js',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath:'dist/'
     },
     module: {
-        loaders: [{
-            test: /\.js$/,
-            loader: 'eslint-loader',
-            exclude: /node_modules/
-        }, {
-            test: /\.(jpe?g|png|gif)$/i,
-            loader: 'file-loader',
-            query: {
-                name: '[name].[ext]',
-                outputPath: 'images/'
+        rules: [
+            {
+                test: /\.js$/,
+                enforce: "pre",
+                loader: 'eslint-loader',
+                exclude: /node_modules/,
+                options: {
+                    configFile: '.eslintrc.json'
+                }
             },
-        }, {
-            test: /node_modules\/jquery-ui\/.*\.css$/,
-            loaders: ['style-loader','css-loader']
-        }],
+            {
+                test: /\.(jpe?g|png|gif)$/i,
+                loader: 'file-loader',
+                query: {
+                    name: '[name].[ext]',
+                    outputPath: 'images/'
+                },
+            },
+            {
+				test: /\.css$/,
+                include: /node_modules/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: ['style-loader', 'css-loader']
+            }
+        ]
+    },
+    resolve: {
+        // options for resolving module requests
+        // (does not apply to resolving to loaders)
+        modules: [
+            "node_modules",
+            path.join(__dirname, "demo")
+        ],
+        // directories where to look for modules
+        extensions: [".js", ".json", ".jsx", ".css"]
     },
     plugins: [
         new CopyWebpackPlugin([{
@@ -39,12 +62,27 @@ module.exports = {
         }, {
             from: 'demo/static',
             to: 'static'
-        }]),
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery',
-            'window.$': 'jquery',
-        })
+        }, {
+            from: 'demo/*'
+        }
+        ]),
+        new webpack.LoaderOptionsPlugin({
+            test: /\.js$/,
+            context: __dirname,
+            debug: true,
+            options: {
+                eslint: {
+                    configFile: '.eslintrc.json'
+                }
+            }
+        }),
+        new webpack.ProvidePlugin(
+            {
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery',
+                'window.$': 'jquery'
+            }
+        )
     ]
 };
