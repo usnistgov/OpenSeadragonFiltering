@@ -487,7 +487,33 @@
                 context.putImageData(imgData, 0, 0);
                 callback();
             };
-        }
+        },
+        SOBEL: function () {
+            return function (context, callback) {
+                var imgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+                var pixels = imgData.data;
+                var originalPixels = context.getImageData(0, 0, context.canvas.width, context.canvas.height).data;
+                var oneRowOffset = context.canvas.width * 4;
+                var onePixelOffset = 4;
+                var Gy, Gx;
+                var idx = 0;
+                for (var i = 1; i < context.canvas.height - 1; i += 1) {
+                    idx = oneRowOffset * i + 4;
+                    for (var j = 1; j < context.canvas.width - 1; j += 1) {
+                        Gy = originalPixels[idx - onePixelOffset + oneRowOffset] + 2 * originalPixels[idx + oneRowOffset] + originalPixels[idx + onePixelOffset + oneRowOffset];
+                        Gy = Gy - (originalPixels[idx - onePixelOffset - oneRowOffset] + 2 * originalPixels[idx - oneRowOffset] + originalPixels[idx + onePixelOffset - oneRowOffset]);
+                        Gx = originalPixels[idx + onePixelOffset - oneRowOffset] + 2 * originalPixels[idx + onePixelOffset] + originalPixels[idx + onePixelOffset + oneRowOffset];
+                        Gx = Gx - (originalPixels[idx - onePixelOffset - oneRowOffset] + 2 * originalPixels[idx - onePixelOffset] + originalPixels[idx - onePixelOffset + oneRowOffset]);
+                        pixels[idx] = Math.sqrt(Gx * Gx + Gy * Gy);
+                        pixels[idx + 1] = 0;
+                        pixels[idx + 2] = 0;
+                        idx += 4;
+                    }
+                }
+                context.putImageData(imgData, 0, 0);
+                callback();
+            };
+        },
     };
 
 }());
