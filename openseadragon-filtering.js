@@ -42,6 +42,14 @@
         }
     };
 
+    $.Viewer.prototype.getFilters = function () {
+        if (!this.filterPluginInstance) {
+            return [];
+        } else {
+            return getFilters(this.filterPluginInstance);
+        }
+    }
+
     /**
      * @class FilterPlugin
      * @param {Object} options The options
@@ -81,7 +89,7 @@
                 return;
             }
             var tile = event.tile;
-            var image = event.image;
+            var image = event.data;
             if (image !== null && image !== undefined) {
                 var canvas = window.document.createElement('canvas');
                 canvas.width = image.width;
@@ -173,6 +181,10 @@
             rendered._filterIncrement = self.filterIncrement;
         }
     };
+
+    function getFilters(instance) {
+        return instance.filters || [];
+    }
 
     function setOptions(instance, options) {
         options = options || {};
